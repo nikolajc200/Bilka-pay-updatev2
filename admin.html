@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00a3d9">
+  <title>Administration - Bilka Pay</title>
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem("bilka-pay-theme") === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260803f">
+</head>
+<body class="admin-body">
+  <header class="app-header">
+    <div class="brand-row">
+      <div class="brand">
+        <div class="brand-mark">
+          <img src="assets/hvem-ka-bilka-header.png?v=20260803f" alt="Hvem Ka Bilka">
+        </div>
+        <div class="brand-copy">
+          <strong>Administration</strong>
+          <span>Brugere og adgang</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a class="header-button" href="/">Tilbage til appen</a>
+        <button id="logout" class="header-button" type="button">Log ud</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="panel">
+      <h2>Opret bruger</h2>
+      <p class="auth-hint">
+        Adgangskoden bliver genereret og vist én gang. Brugeren skal skifte den ved første login.
+      </p>
+      <form id="create-form" class="admin-create">
+        <div>
+          <label for="new-username">Brugernavn</label>
+          <input id="new-username" type="text" autocapitalize="none" spellcheck="false"
+                 placeholder="fx anna" required>
+        </div>
+        <div>
+          <label for="new-role">Rolle</label>
+          <select id="new-role">
+            <option value="user">Bruger</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+        <button id="create-submit" class="primary-button" type="submit">Opret</button>
+      </form>
+      <p id="create-error" class="auth-error" role="alert" hidden></p>
+      <div id="new-credentials" class="credential-box" hidden></div>
+    </section>
+
+    <section class="panel">
+      <h2>Brugere</h2>
+      <div id="users-status" class="auth-hint">Henter…</div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Brugernavn</th>
+              <th>Rolle</th>
+              <th>Status</th>
+              <th>Oprettet</th>
+              <th>Sidste login</th>
+              <th>Handlinger</th>
+            </tr>
+          </thead>
+          <tbody id="users-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="admin.js?v=20260803f"></script>
+</body>
+</html>

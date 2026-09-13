@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: bilka-pay
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_SSL
+        value: "true"
+      - key: DATABASE_URL
+        sync: false

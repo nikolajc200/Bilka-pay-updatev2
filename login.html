@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00a3d9">
+  <title>Log ind - Bilka Pay</title>
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem("bilka-pay-theme") === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260803f">
+</head>
+<body class="auth-body">
+  <main class="auth-card">
+    <div class="auth-brand">
+      <img src="assets/hvem-ka-bilka.png?v=20260803f" alt="Hvem Ka Bilka">
+      <div>
+        <strong>Bilka Pay</strong>
+        <span>Løn og planlægning</span>
+      </div>
+    </div>
+
+    <form id="login-form" class="auth-form">
+      <h1>Log ind</h1>
+      <label for="username">Brugernavn</label>
+      <input id="username" name="username" type="text" autocomplete="username"
+             autocapitalize="none" spellcheck="false" required>
+
+      <label for="password">Adgangskode</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+      <p id="login-error" class="auth-error" role="alert" hidden></p>
+      <button id="login-submit" class="primary-button" type="submit">Log ind</button>
+    </form>
+
+    <form id="change-form" class="auth-form" hidden>
+      <h1>Vælg en ny adgangskode</h1>
+      <p class="auth-hint">Din adgangskode skal skiftes, før du kan fortsætte.</p>
+
+      <label for="current-password">Nuværende adgangskode</label>
+      <input id="current-password" name="currentPassword" type="password"
+             autocomplete="current-password" required>
+
+      <label for="new-password">Ny adgangskode</label>
+      <input id="new-password" name="newPassword" type="password"
+             autocomplete="new-password" minlength="10" required>
+
+      <label for="repeat-password">Gentag ny adgangskode</label>
+      <input id="repeat-password" name="repeatPassword" type="password"
+             autocomplete="new-password" minlength="10" required>
+
+      <p id="change-error" class="auth-error" role="alert" hidden></p>
+      <button id="change-submit" class="primary-button" type="submit">Gem og fortsæt</button>
+    </form>
+  </main>
+
+  <script type="module" src="login.js?v=20260803f"></script>
+</body>
+</html>

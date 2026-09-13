@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00a3d9">
+  <title>Bilka Pay</title>
+  <script>
+    (() => {
+      try {
+        const theme = localStorage.getItem("bilka-pay-theme") === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260803f">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-row">
+      <div class="brand">
+        <div class="brand-mark">
+          <img src="assets/hvem-ka-bilka-header.png?v=20260803f" alt="Hvem Ka Bilka">
+        </div>
+        <div class="brand-copy">
+          <strong>Pay</strong>
+          <span>Løn og planlægning</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="sync-button" aria-live="polite">
+          <span id="sync-dot" class="sync-dot"></span>
+          <span id="sync-label">Henter plan...</span>
+        </span>
+        <a id="admin-link" class="header-button" href="/admin" hidden>Administration</a>
+        <button id="sign-out" class="header-button" type="button">Log ud</button>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Skift til mørk tilstand">
+          <span id="theme-icon" aria-hidden="true">☾</span>
+          <span id="theme-label">Mørk</span>
+        </button>
+        <button id="export-data" class="header-button" type="button">Eksportér</button>
+        <label class="header-button file-button">
+          Importér
+          <input id="import-data" type="file" accept="application/json">
+        </label>
+      </div>
+    </div>
+
+    <section class="period-summary" aria-label="Lønperiode">
+      <div class="period-title-row">
+        <button id="previous-period" class="period-arrow" type="button" title="Forrige periode" aria-label="Forrige periode">‹</button>
+        <button id="current-period" class="period-title" type="button">
+          <small>Lønperiode</small>
+          <strong id="period-label">19. april - 18. maj</strong>
+        </button>
+        <button id="next-period" class="period-arrow" type="button" title="Næste periode" aria-label="Næste periode">›</button>
+      </div>
+      <div class="period-metrics">
+        <div><span>Vagter</span><strong id="shell-shifts">0</strong></div>
+        <div><span>Samlet løn</span><strong id="shell-pay">0,00 DKK</strong></div>
+        <div><span>Tilbage</span><strong id="shell-left">0,00 DKK</strong></div>
+      </div>
+      <button id="jump-current-period" class="jump-current" type="button">Spring til nuværende periode</button>
+    </section>
+  </header>
+
+  <nav class="tabs" aria-label="Sider">
+    <button class="tab active" type="button" data-tab="dashboard"><span>↗</span>Overblik</button>
+    <button class="tab" type="button" data-tab="time-log"><span>□</span>Vagter</button>
+    <button class="tab" type="button" data-tab="payments"><span>▣</span>Regninger</button>
+    <button class="tab" type="button" data-tab="extras"><span>☆</span>Opsparing</button>
+    <button class="tab" type="button" data-tab="settings"><span>⚙</span>Indstillinger</button>
+  </nav>
+
+  <main>
+    <section id="dashboard" class="view active"></section>
+    <section id="time-log" class="view"></section>
+    <section id="payments" class="view"></section>
+    <section id="extras" class="view"></section>
+    <section id="settings" class="view"></section>
+  </main>
+
+  <div id="modal-root"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="app.js?v=20260803f"></script>
+</body>
+</html>

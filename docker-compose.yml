@@ -1,0 +1,59 @@
+services:
+  database:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bilka_pay
+      POSTGRES_USER: bilka
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
+    volumes:
+      - bilka-pay-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bilka -d bilka_pay"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      HOST: 0.0.0.0
+      PORT: 4173
+      NODE_ENV: production
+      DATABASE_SSL: "false"
+      TRUST_PROXY: "${TRUST_PROXY:-false}"
+      TIME_ZONE: "${TIME_ZONE:-Europe/Copenhagen}"
+      APP_URL: "${APP_URL:-}"
+      DAILY_JOB_HOUR: "${DAILY_JOB_HOUR:-7}"
+      DISCORD_PUBLIC_KEY: "${DISCORD_PUBLIC_KEY:-}"
+      DISCORD_APPLICATION_ID: "${DISCORD_APPLICATION_ID:-}"
+      DATABASE_URL: postgresql://bilka:${POSTGRES_PASSWORD:-change-this-password}@database:5432/bilka_pay
+    ports:
+      - "${APP_PORT:-4173}:4173"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4173/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Only starts with: docker compose --profile tunnel up -d
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    profiles: ["tunnel"]
+    depends_on:
+      app:
+        condition: service_healthy
+    command: tunnel --no-autoupdate run
+    # Compose interpolates every service even when the profile is inactive, so
+    # this cannot use the ":?" required form without breaking a plain "up".
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
+
+volumes:
+  bilka-pay-postgres:
